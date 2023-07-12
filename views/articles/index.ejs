@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="grid grid-cols-6 h-full w-full">
+        <%- include('../_sidebar') %>
+        <div class="main col-span-5 h-screen">
+            <div class="flex items-center justify-between px-6" style="height: 10%">
+                <span class="font-bold text-sm text-blue-900 block">Janko</span>
+                <a href="/profile/show">
+                    <% if (profile.image) { %>        
+                      <img src="http://localhost:5000/images/<%= profile.image %>" alt="" class="rounded-3xl" width="40px" height="40px">                         
+                        <%} else { %>
+                      <img src="https://www.dropbox.com/paper/ep/redirect/image?url=https%3A%2F%2Fpaper-attachments.dropboxusercontent.com%2Fs_02A2C42C96B6344CBDC9FE3D91698EA7C0E21FEA9EE434758B1DD83D5A367442_1688809434892_no%2Buser.png&hmac=ZvrRpYeawdErX4NGAGKRRopIena4EZUVwb8eupNfPf0%3D&width=1490" alt="" class="rounded-3xl" width="40px" height="40px">     
+                     <% } %>                    
+                </a>
+            </div>
+            <div class="px-6 py-2" style="background: #F3F4F6; height: 90%">
+                <div class="flex items-center justify-between">
+                    <% if (articles.length == 0) { %>
+                        <span class="block text-2xl my-4">No Posts Yet</span>
+                    <%} else { %>
+                        <span class="block text-2xl my-4">Posts</span>
+                    <% } %>                    
+                    <a href="/articles/new" class="bg-blue-500 text-white px-4 py-2 rounded-md">Add Post</a>
+                </div>
+                
+                <% if (articles.length == 0) { %>                                
+                    <span></span>
+                <%} else { %>
+                    <table class="border-collapse border border-slate-400">
+                        <thead>
+                          <tr>
+                            <th class="border border-slate-300 p-2">Author</th>
+                            <th class="border border-slate-300 p-2">Title</th>
+                            <th class="border border-slate-300 p-2">Description</th>
+                            <th class="border border-slate-300 p-2">Slug</th>
+                            <th class="border border-slate-300 ">Created At</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <% articles.forEach(article => { %>            
+                            <% if (article.user._id == userID) { %>
+                                <tr>
+                                    <td class="border border-slate-300 p-2">YOU (<%= article.user.name %>)</td>
+                                    <td class="border border-slate-300 p-2"><a href="/articles/<%= article.slug %>"><%= article.title %></a></td>
+                                    <td class="border border-slate-300 p-2"><%= article.description.slice(0, 50) %>...</td>
+                                    <td class="border border-slate-300 p-2"><%= article.slug %></td>
+                                    <td class="border border-slate-300 p-2"><%= article.createdAt.toLocaleDateString() %></td>
+                                    <td class="border border-slate-300 p-2"><a href="articles/edit/<%= article.id %>" class="bg-blue-500 text-white py-2 px-4 rounded-md">Edit</a></td>
+                                    <td class="border border-slate-300 p-2">
+                                        <form action="/articles/<%= article.id %>?_method=DELETE" method="POST" class="inline">
+                                            <button type="submit" class="bg-red-500 py-2 px-4 text-white rounded-md">Delete</button>
+                                        </form>
+                                    </td>
+                                  </tr>            
+                            <%} else { %>
+                                <tr>
+                                    <td class="border border-slate-300 p-2"><%= article.user.name %></td>
+                                    <td class="border border-slate-300 p-2"><a href="/articles/<%= article.slug %>"><%= article.title %></a></td>
+                                    <td class="border border-slate-300 p-2"><%= article.description.slice(0, 50) %>...</td>
+                                    <td class="border border-slate-300 p-2"><%= article.slug %></td>
+                                    <td class="border border-slate-300 p-2"><%= article.createdAt.toLocaleDateString() %></td>                                
+                                  </tr>    
+                            <% } %>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>
+</html>
